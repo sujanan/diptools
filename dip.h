@@ -2,7 +2,7 @@
 #define DIP_H
 
 struct image {
-	int width, height, nchannels;
+	int width, height, n_channels;
 	unsigned char *data;
 };
 
