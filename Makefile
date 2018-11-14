@@ -14,4 +14,4 @@ dip.o: stb_image.h dip.h
 histogram.o: histogram.h dip.h
 
 clean:
-	rm -rf *.o bin $(PROG)
+	rm -rf *.o bin/* $(PROG)
