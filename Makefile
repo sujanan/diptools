@@ -1,17 +1,17 @@
 CC=gcc
 CFLAG=-Wall -g
 
-PROG=dip
+PROG=diptool
 LIBS=-lm
 
 all: $(PROG)
 
-dip: dip.o histogram.o
-	$(CC) $(CFLAGS) -o bin/dip dip.o histogram.o $(LIBS)
+diptool: diptool.o histogram.o
+	$(CC) $(CFLAGS) -o diptool diptool.o histogram.o $(LIBS)
 
-dip.o: stb_image.h dip.h
+diptool.o: stb_image.h diptool.h
 
-histogram.o: histogram.h dip.h
+histogram.o: histogram.h diptool.h
 
 clean:
-	rm -rf *.o bin/* $(PROG)
+	rm -rf *.o $(PROG)

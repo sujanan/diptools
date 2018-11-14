@@ -2,7 +2,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "histogram.h"
-#include "dip.h"
+#include "diptool.h"
 
 static void read_jpeg(struct image *image, const char *filename)
 {

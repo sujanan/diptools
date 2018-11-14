@@ -1,5 +1,5 @@
-#ifndef DIP_H
-#define DIP_H
+#ifndef DIPTOOL_H
+#define DIPTOOL_H
 
 struct image {
 	int width, height, n_channels;

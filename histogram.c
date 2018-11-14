@@ -57,7 +57,7 @@ void print_histogram(const struct histogram *histogram)
 	int i, j;
 
     	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);		
-	unit = fmax / (w.ws_col - 7); /* "[%3d]: "*/
+	unit = (double) fmax / (w.ws_col - 7); /* "[%3d]: "*/
 
 	for (i = 0; i < histogram->n_intensity; i++) {
 		n_units = (unsigned int) (histogram->data[i] / unit);

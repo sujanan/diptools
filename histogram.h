@@ -1,7 +1,7 @@
 #ifndef HISTOGRAM_H
 #define HISTOGRAM_H
 
-#include "dip.h"
+#include "diptool.h"
 
 struct histogram {
 	int n_intensity, min, max;
