@@ -8,7 +8,7 @@
 
 const char *prompt_string = "[diptool]";
 
-static size_t read_line(char *buf, size_t len)
+static size_t read_line(char *buf, int len)
 {
 	int c, i = 0;	
 	while ((c = getchar()) != '\n' && c != EOF && i < len - 1)
@@ -21,7 +21,7 @@ static size_t read_line(char *buf, size_t len)
 	return i;
 }
 
-static char *build_token(char *start, size_t len)
+static char *build_token(char *start, int len)
 {
 	char *token = malloc(len + 1);
 
@@ -29,16 +29,18 @@ static char *build_token(char *start, size_t len)
 		fprintf(stderr, "error: %s\n", strerror(errno));
 		exit(1);
 	}
+	memset(token, 0, len + 1);
 	strncpy(token, start, len);
 	return token;
 }
 
-static char **build_tokenarray(char *buf, size_t buflen)
+static char **build_tokenarray(char *buf, int buflen, int *tokenarray_len)
 {	
-	size_t tokenarray_size = 8;	
+	int tokenarray_size = 8;	
 	char **tokenarray;
 	int i = 0, j = 0, k = 0, tmp = 0;
 
+	*tokenarray_len = 0;
 	/* Skip all heading spaceses */
 	while (i < buflen && isspace(buf[i]))
 		i++;	
@@ -66,6 +68,7 @@ static char **build_tokenarray(char *buf, size_t buflen)
 	if (j != 0)
 		tokenarray[k++] = build_token(buf + i - j, j);
 
+	*tokenarray_len = k;
 	tokenarray[k] = NULL;
 	return tokenarray;
 error:
@@ -73,26 +76,38 @@ error:
 	exit(1);
 }
 
-static void free_tokenarray(char **tokenarray)
+static void free_tokenarray(char **tokenarray, int tokenarray_len)
 {
 	if (tokenarray == NULL)
 		return;
 	int i; 
 	
-	for (i = 0; tokenarray[i] != NULL; i++)
+	for (i = 0; i < tokenarray_len; i++)
 		free(tokenarray[i]);
 	free(tokenarray);
 }
 
-static void exec_line(char *buf, size_t buflen)
+static void exec_line(char *buf, int buflen)
 {
-	char **tokenarray = build_tokenarray(buf, buflen);
-	free_tokenarray(tokenarray);
+	int len; 
+	char **tokens = build_tokenarray(buf, buflen, &len);
+	char *cmd;
+
+	if (len == 0) {
+		free_tokenarray(tokens, len);
+		return;
+	}
+	cmd = tokens[0];
+	if (!strcmp(cmd, "read")) {
+		exec_read(tokens + 1, len - 1);	
+	}
+
+	free_tokenarray(tokens, len);
 }
 
 int main(int argc, char **argv)
 {
-	size_t bufsize = 1024, buflen;
+	int bufsize = 1024, buflen;
 	char buf[bufsize];
 
 	while (1) {
