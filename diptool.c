@@ -57,6 +57,10 @@ static char **build_tokenarray(char *buf, int buflen, int *tokenarray_len)
 			/* Save i before interate through spaceses */
 			while (i < buflen && isspace(buf[i]))	
 				i++;
+			/* Double the array */
+			tokenarray = realloc(tokenarray, tokenarray_size *= 2);
+			if (tokenarray == NULL)
+				goto error;
 			tokenarray[k++] = build_token(buf + tmp - j, j);
 			j = 0;
 		} else {
@@ -65,8 +69,13 @@ static char **build_tokenarray(char *buf, int buflen, int *tokenarray_len)
 		}
 	}
 	/* Has a token to proccess */
-	if (j != 0)
+	if (j != 0) {
+		/* This case is a unfortune */
+		tokenarray = realloc(tokenarray, tokenarray_size += 2);
+		if (tokenarray == NULL)
+			goto error;
 		tokenarray[k++] = build_token(buf + i - j, j);
+	}
 
 	*tokenarray_len = k;
 	tokenarray[k] = NULL;
